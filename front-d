@@ -20,7 +20,7 @@ spec:
         - containerPort: 9980
         env:
         - name: VITE_OMEGA_IP
-          value: "http://10.0.35.12:30556"  # Adjusted to match backend NodePort; update as needed
+          value: "https://10.0.35.12"  # Adjusted to match backend NodePort; update as needed
         - name: VITE_APP_KEYCLOCK_CLIENT
           value: "cluster-testing1"
         - name: VITE_APP_KEYCLOCK_REALM
