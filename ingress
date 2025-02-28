@@ -158,3 +158,5 @@ kubectl create secret tls ingress-local-tls --key tls.key --cert tls.crt -n deve
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=omega.local" -addext "subjectAltName=DNS:omega.local"
 kubectl create secret tls ingress-local-tls --key tls.key --cert tls.crt -n devendra
+
+kubectl get secret ingress-local-tls -n devendra -o jsonpath='{.data.tls\.crt}' | base64 -d
