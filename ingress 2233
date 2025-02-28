@@ -34,7 +34,7 @@ metadata:
   name: front-dev-srv
   namespace: devendra
 spec:
-  type: NodePort
+  type: ClusterIP  # Changed from NodePort
   selector:
     app: client22
   ports:
@@ -42,7 +42,7 @@ spec:
     protocol: TCP
     port: 9980
     targetPort: 9980
-    nodePort: 31200
+    # nodePort: 31200  # Removed
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -84,7 +84,7 @@ metadata:
   name: dev-back-srv
   namespace: devendra
 spec:
-  type: NodePort
+  type: ClusterIP  # Changed from NodePort
   selector:
     app: dev
   ports:
@@ -92,7 +92,7 @@ spec:
     protocol: TCP
     port: 8000
     targetPort: 8000
-    nodePort: 30556
+    # nodePort: 30556  # Removed
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
