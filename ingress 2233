@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deva
+  namespace: devendra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client22
+  template:
+    metadata:
+      labels:
+        app: client22
+    spec:
+      containers:
+      - name: deva
+        image: ashish7974/omega-frontend
+        ports:
+        - containerPort: 9980
+        env:
+        - name: VITE_OMEGA_IP
+          value: "https://10.0.35.12"  # Consider updating to internal service DNS
+        - name: VITE_APP_KEYCLOCK_CLIENT
+          value: "cluster-testing1"
+        - name: VITE_APP_KEYCLOCK_REALM
+          value: "gitlab"
+        - name: VITE_LGTM_IP
+          value: "10.0.34.12"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-dev-srv
+  namespace: devendra
+spec:
+  type: NodePort
+  selector:
+    app: client22
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9980
+    targetPort: 9980
+    nodePort: 31200
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-dev
+  namespace: devendra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev
+  template:
+    metadata:
+      labels:
+        app: dev
+    spec:
+      containers:
+      - name: dev-back22
+        image: ashish7974/omega-backend
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_HOST
+          value: "10.0.35.12"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "test"
+        - name: DB_USER
+          value: "test"
+        - name: DB_PASSWORD
+          value: "linux"
+        - name: OMEGA_IP
+          value: "10.0.35.12:30556"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-back-srv
+  namespace: devendra
+spec:
+  type: NodePort
+  selector:
+    app: dev
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+    nodePort: 30556
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: omega-ingress
+  namespace: devendra
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - omega.local
+    secretName: ingress-local-tls
+  rules:
+  - host: omega.local
+    http:
+      paths:
+      - path: /api/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: dev-back-srv
+            port:
+              number: 8000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: front-dev-srv
+            port:
+              number: 9980
