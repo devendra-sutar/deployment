@@ -180,3 +180,6 @@ spec:
             name: front-dev-srv
             port:
               number: 9980
+
+
+https://github.com/vipin-k/How-to-setup-SSL-TLS-certificate-on-ingress-controller-for-Kubernetes-Cluster/blob/master/End%20to%20end%20file%20for%20SSL%20deployment
