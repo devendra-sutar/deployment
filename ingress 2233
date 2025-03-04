@@ -328,3 +328,12 @@ spec:
                 name: dev-back-srv
                 port:
                   number: 8000
+
+
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout tls.key -out tls.crt -subj "/CN=example.com"
+
+base64 tls.crt | tr -d '\n'    \\Encode the certificat
+base64 tls.key | tr -d '\n'  \\encode key
+
