@@ -28,8 +28,8 @@ spec:
         ports:
         - containerPort: 9980
         env:
-        - name: VITE_OMEGA_IP
-          value: "https://example.com/api"  # Points to backend via Ingress
+        - name: VITE_OMEGA_DOMAIN
+          value: "https://example.com"  # Points to backend via Ingress
         - name: VITE_APP_KEYCLOCK_CLIENT
           value: "cluster-testing1"
         - name: VITE_APP_KEYCLOCK_REALM
@@ -98,7 +98,7 @@ metadata:
   name: dev-back-srv
   namespace: devendra
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: dev
   ports:
@@ -106,6 +106,7 @@ spec:
     protocol: TCP
     port: 8000
     targetPort: 8000
+    nodePort: 30556
 
 ---
 # Ingress for Frontend and Backend
